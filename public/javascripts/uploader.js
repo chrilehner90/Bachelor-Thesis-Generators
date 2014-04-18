@@ -38,8 +38,9 @@ window.onload = function() {
 			// from the FileReader.onloadend function
 			if(evt) {
 				result = evt.target.result;
+				console.log(fileIndex);
 				var file = {
-					"data": files[fileIndex--],
+					"data": files[fileIndex - 1],
 					"src": result
 				};
 			}
