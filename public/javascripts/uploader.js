@@ -2,7 +2,7 @@ window.onload = function() {
 
 	function handleFileInput(evt) {
 		var files = evt.target.files;
-	  	var processedFiles = [];
+		var processedFiles = [];
 
 		asyncTaskRunner(files, function*() {
 			try {
@@ -10,7 +10,8 @@ window.onload = function() {
 					// yields this object: {value: function, done: true || false}
 					processedFiles.push(yield readFile(files[i]));
 				}
-				console.log(processedFiles);
+				yield uploadFiles(processedFiles);
+				console.log("finished...");
 			}
 			catch(e) {
 				console.log(e);
@@ -22,8 +23,24 @@ window.onload = function() {
 	 	return function(callback) {
 	 		var reader = new FileReader();
 	 		reader.onloadend = callback;
+	 		console.log("reading...");
 	 		reader.readAsDataURL(file);
 	 	}
+	}
+
+	function uploadFiles(files) {
+		return function(callback) {
+			var formData = new FormData();
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "http://localhost:3000/upload", true);
+			xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
+			xhr.onload = callback;
+			for(var file in files) {
+				formData.append("uploads", files[file].data);
+			}
+			console.log("uploading...");
+			xhr.send(formData);
+		}
 	}
 
 	function asyncTaskRunner(files, generatorFunction) {
