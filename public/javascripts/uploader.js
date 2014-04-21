@@ -1,5 +1,5 @@
 window.onload = function() {
-
+	'use strict';
 	function handleFileInput(evt) {
 		var files = evt.target.files;
 		var processedFiles = [];
@@ -11,7 +11,7 @@ window.onload = function() {
 					processedFiles.push(yield readFile(files[i]));
 				}
 				yield uploadFiles(processedFiles);
-				console.log("finished...");
+				console.log('finished...');
 			}
 			catch(e) {
 				console.log(e);
@@ -23,24 +23,24 @@ window.onload = function() {
 	 	return function(callback) {
 	 		var reader = new FileReader();
 	 		reader.onloadend = callback;
-	 		console.log("reading...");
+	 		console.log('reading...');
 	 		reader.readAsDataURL(file);
-	 	}
+	 	};
 	}
 
 	function uploadFiles(files) {
 		return function(callback) {
 			var formData = new FormData();
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", "http://localhost:3000/upload", true);
+			xhr.open('POST', 'http://localhost:3000/upload', true);
 			xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
 			xhr.onload = callback;
 			for(var file in files) {
-				formData.append("uploads", files[file].data);
+				formData.append('uploads', files[file].data);
 			}
-			console.log("uploading...");
+			console.log('uploading...');
 			xhr.send(formData);
-		}
+		};
 	}
 
 	function asyncTaskRunner(files, generatorFunction) {
@@ -54,11 +54,12 @@ window.onload = function() {
 
 			// evt is defined when this function was used as a callback
 			// from the FileReader.onloadend function
+			var processedFile;
 			if(evt) {
 				result = evt.target.result;
-				var processedFile = {
-					"data": files[fileIndex - 1],
-					"src": result
+				processedFile = {
+					'data': files[fileIndex - 1],
+					'src': result
 				};
 			}
 
@@ -81,7 +82,7 @@ window.onload = function() {
 
 		// Click button to see that the site is still responding while it reads the files
 		document.getElementById('btn').addEventListener('click', function() {
-			console.log("clicked");
+			console.log('clicked');
 		}, false);
 	}
 	else {
