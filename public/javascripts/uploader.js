@@ -6,9 +6,10 @@ window.onload = function() {
 
 		asyncTaskRunner(files, function*() {
 			try {
-				for(var i = 0; i < files.length; i++)
+				for(var i = 0; i < files.length; i++) {
+					// yields this object: {value: function, done: true || false}
 					processedFiles.push(yield readFile(files[i]));
-				
+				}
 				console.log(processedFiles);
 			}
 			catch(e) {
@@ -38,8 +39,7 @@ window.onload = function() {
 			// from the FileReader.onloadend function
 			if(evt) {
 				result = evt.target.result;
-				console.log(fileIndex);
-				var file = {
+				var processedFile = {
 					"data": files[fileIndex - 1],
 					"src": result
 				};
@@ -47,7 +47,7 @@ window.onload = function() {
 
 			// send the file to the generator (first time it's undefined)
 			// it returns an object with the returned function of readFile as the value
-			var generatorResponse = generator.next(file);
+			var generatorResponse = generator.next(processedFile);
 			if(!generatorResponse.done) {
 				// execute the value, which is a function and give this function as an argument
 				generatorResponse.value(nextFile);
