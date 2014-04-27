@@ -59,7 +59,6 @@ window.onload = function() {
 
 
 			var processedFile;
-			var error;
 			var generatorResponse;
 			if(evt) {
 				if(evt.target.error) {
@@ -77,18 +76,12 @@ window.onload = function() {
 
 			// send the file to the generator (first time it's undefined)
 			// it returns an object with the returned function of readFile as the value
-			if(!error) {
-				generatorResponse = generator.next(processedFile);
-				if(!generatorResponse.done) {
-					// execute the value, which is a function and give this function as an argument
-					generatorResponse.value(nextFile);
-					fileIndex++;
-				}
+			generatorResponse = generator.next(processedFile);
+			if(!generatorResponse.done) {
+				// execute the value, which is a function and give this function as an argument
+				generatorResponse.value(nextFile);
+				fileIndex++;
 			}
-			
-			
-			
-			
 		}
 		nextFile(); // start the async loop
 	}
