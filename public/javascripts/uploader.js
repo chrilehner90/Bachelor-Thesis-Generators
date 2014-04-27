@@ -50,13 +50,9 @@ window.onload = function() {
 		var fileIndex = 0;
 
 		// async loop pattern
-		// this function is the callback for FileReader.onloadend
+		// this function is the callback for FileReader's and XMLHTTPRequest's events
 		function nextFile(evt) {
 			var result;
-
-			// evt is defined when this function was used as a callback
-			// from the FileReader.onloadend function
-
 
 			var processedFile;
 			var generatorResponse;
@@ -65,7 +61,6 @@ window.onload = function() {
 					generator.throw(evt.target.error.message);	
 				}
 				else if (evt.target.status && evt.target.status !== 200) {
-					console.log(evt);
 					generator.throw(evt.target.statusText);
 				}
 				processedFile = {
@@ -74,8 +69,6 @@ window.onload = function() {
 				};
 			}
 
-			// send the file to the generator (first time it's undefined)
-			// it returns an object with the returned function of readFile as the value
 			generatorResponse = generator.next(processedFile);
 			if(!generatorResponse.done) {
 				// execute the value, which is a function and give this function as an argument
