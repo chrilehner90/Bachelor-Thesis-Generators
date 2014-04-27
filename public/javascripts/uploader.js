@@ -13,8 +13,8 @@ window.onload = function() {
 				yield uploadFiles(processedFiles);
 				console.log('finished...');
 			}
-			catch(e) {
-				console.log(e);
+			catch(err) {
+				console.error(err);
 			}
 		});
 	}
@@ -22,7 +22,8 @@ window.onload = function() {
 	function readFile(file) {
 	 	return function(callback) {
 	 		var reader = new FileReader();
-	 		reader.onloadend = callback;
+	 		reader.onload = callback;
+	 		reader.onerror = callback;
 	 		console.log('reading...');
 	 		reader.readAsDataURL(file);
 	 	};
@@ -35,6 +36,7 @@ window.onload = function() {
 			xhr.open('POST', 'http://localhost:3000/upload', true);
 			xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
 			xhr.onload = callback;
+			xhr.onerror = callback;
 			for(var file in files) {
 				formData.append('uploads', files[file].data);
 			}
@@ -54,9 +56,19 @@ window.onload = function() {
 
 			// evt is defined when this function was used as a callback
 			// from the FileReader.onloadend function
+
+
 			var processedFile;
+			var error;
+			var generatorResponse;
 			if(evt) {
-				result = evt.target.result;
+				if(evt.target.error) {
+					generator.throw(evt.target.error.message);	
+				}
+				else if (evt.target.status && evt.target.status !== 200) {
+					console.log(evt);
+					generator.throw(evt.target.statusText);
+				}
 				processedFile = {
 					'data': files[fileIndex - 1],
 					'src': result
@@ -65,12 +77,18 @@ window.onload = function() {
 
 			// send the file to the generator (first time it's undefined)
 			// it returns an object with the returned function of readFile as the value
-			var generatorResponse = generator.next(processedFile);
-			if(!generatorResponse.done) {
-				// execute the value, which is a function and give this function as an argument
-				generatorResponse.value(nextFile);
-				fileIndex++;
+			if(!error) {
+				generatorResponse = generator.next(processedFile);
+				if(!generatorResponse.done) {
+					// execute the value, which is a function and give this function as an argument
+					generatorResponse.value(nextFile);
+					fileIndex++;
+				}
 			}
+			
+			
+			
+			
 		}
 		nextFile(); // start the async loop
 	}
