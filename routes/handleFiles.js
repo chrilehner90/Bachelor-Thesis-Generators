@@ -6,6 +6,11 @@ exports.receiveUpload = function(req, res){
 	var files = req.files.uploads;
 	var promisedFiles = [];
 
+	if(files === undefined) {
+		res.statusCode = 400;
+		res.end();
+	}
+	
 	if(req.files.uploads.length !== undefined) {
 		for(var file in files) {
 			promisedFiles.push(fileHandler(files[file]));
