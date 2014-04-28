@@ -20,13 +20,13 @@ window.onload = function() {
 	}
 
 	function readFile(file) {
-	 	return function(callback) {
-	 		var reader = new FileReader();
-	 		reader.onload = callback;
-	 		reader.onerror = callback;
-	 		console.log('reading...');
-	 		reader.readAsDataURL(file);
-	 	};
+		return function(callback) {
+			var reader = new FileReader();
+			reader.onload = callback;
+			reader.onerror = callback;
+			console.log("reading...");
+			reader.readAsDataURL(file);
+		};
 	}
 
 	function uploadFiles(files) {
