@@ -69,6 +69,7 @@ window.onload = function() {
 				};
 			}
 
+			//save the yielded object and pass the processed file to the generator to push it into processedFiles array
 			generatorResponse = generator.next(processedFile);
 			if(!generatorResponse.done) {
 				// execute the value, which is a function and give this function as an argument
