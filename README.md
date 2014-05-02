@@ -9,5 +9,5 @@ node app.js
 ```
 
 For the implementations of this application with callbacks or promises, please visit:
-https://github.com/chrilehner90/Bachelor-Thesis-Callbacks or
-https://github.com/chrilehner90/Bachelor-Thesis-Promises
+- https://github.com/chrilehner90/Bachelor-Thesis-Callbacks or
+- https://github.com/chrilehner90/Bachelor-Thesis-Promises
